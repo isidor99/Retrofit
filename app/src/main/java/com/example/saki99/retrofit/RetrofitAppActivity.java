@@ -102,25 +102,6 @@ public class RetrofitAppActivity extends AppCompatActivity {
             potvrdi.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    /*Call<Podatak> data = service.getDataById(Integer.valueOf(uid.getText().toString()));
-
-                    data.enqueue(new Callback<Podatak>() {
-                        @Override
-                        public void onResponse(Call<Podatak> call, Response<Podatak> response) {
-                            Podatak podatak = response.body();
-
-                            ArrayList<Podatak> podaci = new ArrayList<>();
-                            podaci.add(podatak);
-
-                            RecyclerViewAdapter adapter = new RecyclerViewAdapter(podaci);
-                            lista.setAdapter(adapter);
-                        }
-
-                        @Override
-                        public void onFailure(Call<Podatak> call, Throwable t) {
-
-                        }
-                    });*/
 
                     Podatak podatak = dbHelper.getData(Integer.valueOf(uid.getText().toString()));
                     ArrayList<Podatak> podaci = new ArrayList<>();
