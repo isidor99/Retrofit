@@ -1,6 +1,5 @@
 package com.example.saki99.retrofit;
 
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,13 +13,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,6 +30,7 @@ public class RetrofitAppActivity extends AppCompatActivity {
     RecyclerView lista;
     public static final String BASE_URL = "https://jsonplaceholder.typicode.com/";
     Toolbar toolbar;
+    DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +47,9 @@ public class RetrofitAppActivity extends AppCompatActivity {
 
         service = retrofit.create(RetrofitService.class);
 
+        dbHelper = new DBHelper(this);
+        writeToLocalDatabase();
+
         lista = findViewById(R.id.recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         lista.setLayoutManager(linearLayoutManager);
@@ -61,6 +60,13 @@ public class RetrofitAppActivity extends AppCompatActivity {
         super.onStart();
 
         showAll();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        dbHelper.close();
+        super.onDestroy();
     }
 
     @Override
@@ -96,7 +102,7 @@ public class RetrofitAppActivity extends AppCompatActivity {
             potvrdi.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Call<Podatak> data = service.getDataById(Integer.valueOf(uid.getText().toString()));
+                    /*Call<Podatak> data = service.getDataById(Integer.valueOf(uid.getText().toString()));
 
                     data.enqueue(new Callback<Podatak>() {
                         @Override
@@ -114,7 +120,14 @@ public class RetrofitAppActivity extends AppCompatActivity {
                         public void onFailure(Call<Podatak> call, Throwable t) {
 
                         }
-                    });
+                    });*/
+
+                    Podatak podatak = dbHelper.getData(Integer.valueOf(uid.getText().toString()));
+                    ArrayList<Podatak> podaci = new ArrayList<>();
+                    podaci.add(podatak);
+
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(podaci);
+                    lista.setAdapter(adapter);
 
                     dialog.dismiss();
                 }
@@ -125,15 +138,18 @@ public class RetrofitAppActivity extends AppCompatActivity {
         return true;
     }
 
-    private void showAll() {
+    private void writeToLocalDatabase() {
         final Call<List<Podatak>> data = service.getAllData();
 
         data.enqueue(new Callback<List<Podatak>>() {
             @Override
             public void onResponse(Call<List<Podatak>> call, Response<List<Podatak>> response) {
                 List<Podatak> podaci = response.body();
-                RecyclerViewAdapter adapter = new RecyclerViewAdapter(podaci);
-                lista.setAdapter(adapter);
+
+                for (int i = 0; i < podaci.size(); i++) {
+                    dbHelper.addData(podaci.get(i));
+                }
+
 
             }
 
@@ -142,5 +158,13 @@ public class RetrofitAppActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void showAll() {
+
+        List<Podatak> podaci = dbHelper.getAllData();
+
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(podaci);
+        lista.setAdapter(adapter);
     }
 }
