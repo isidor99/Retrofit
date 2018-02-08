@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Retrofit</string>
+
+    <string name="menu_item_show_all">Show all</string>
+    <string name="menu_item_search">Search</string>
+
+    <string name="label_user_id">ID</string>
+    <string name="dialog_potvrdi">Potvrdi</string>
 </resources>
