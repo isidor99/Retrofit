@@ -76,7 +76,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public List<Podatak> getAllData() {
 
-        List<Podatak> podaci = new ArrayList<Podatak>();
+        List<Podatak> podaci = new ArrayList<>();
 
         String query = "SELECT * FROM " + TableNames.TABLE_NAME;
 
@@ -88,7 +88,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 Podatak contact = new Podatak();
                 contact.setTitle(cursor.getString(1));
                 contact.setBody(cursor.getString(2));
-                // Adding contact to list
                 podaci.add(contact);
             } while (cursor.moveToNext());
         }

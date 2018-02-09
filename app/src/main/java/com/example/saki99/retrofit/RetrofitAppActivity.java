@@ -1,5 +1,6 @@
 package com.example.saki99.retrofit;
 
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ public class RetrofitAppActivity extends AppCompatActivity {
     RetrofitService service;
     RecyclerView lista;
     public static final String BASE_URL = "https://jsonplaceholder.typicode.com/";
+    public static final int REQUEST_CODE = 1;
     Toolbar toolbar;
     DBHelper dbHelper;
 
@@ -53,14 +55,8 @@ public class RetrofitAppActivity extends AppCompatActivity {
         lista = findViewById(R.id.recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         lista.setLayoutManager(linearLayoutManager);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
 
         showAll();
-
     }
 
     @Override
@@ -114,9 +110,31 @@ public class RetrofitAppActivity extends AppCompatActivity {
                 }
             });
 
+        } else if (id == R.id.menu_scan_qr) {
+
+
+            Intent i = new Intent(RetrofitAppActivity.this, ScannerActivity.class);
+            startActivityForResult(i, REQUEST_CODE);
+
         }
 
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == REQUEST_CODE && resultCode == ScannerActivity.RESULT_CODE) {
+
+            int id = (int) data.getExtras().get("id");
+
+            Podatak podatak = dbHelper.getData(id);
+            ArrayList<Podatak> podaci = new ArrayList<>();
+            podaci.add(podatak);
+
+            RecyclerViewAdapter adapter = new RecyclerViewAdapter(podaci);
+            lista.setAdapter(adapter);
+        }
     }
 
     private void writeToLocalDatabase() {

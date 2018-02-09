@@ -13,4 +13,10 @@
         app:showAsAction="always"
         android:icon="@drawable/ic_search"
         android:title="@string/menu_item_search" />
+
+    <item
+        android:id="@+id/menu_scan_qr"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_action_name"
+        android:title="@string/menu_scan_qr"/>
 </menu>

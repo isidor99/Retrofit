@@ -6,4 +6,5 @@
 
     <string name="label_user_id">ID</string>
     <string name="dialog_potvrdi">Potvrdi</string>
+    <string name="menu_scan_qr">Skeniraj QR kod</string>
 </resources>
